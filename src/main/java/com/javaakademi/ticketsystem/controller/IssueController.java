@@ -27,4 +27,8 @@ public class IssueController {
     public void deleteIssue(@PathVariable("id") String id){
         issueService.deleteIssue(id);
     }
+    @PutMapping("/update/{id}")
+    public void updateIssue(@PathVariable("id") String id, @RequestBody Issue issue) throws Exception {
+        issueService.updateIssue(id,issue);
+    }
 }

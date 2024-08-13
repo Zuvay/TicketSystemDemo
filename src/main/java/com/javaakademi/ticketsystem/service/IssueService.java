@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class IssueService {
@@ -22,5 +23,18 @@ public class IssueService {
 
     public void deleteIssue(String id){
         issueRepository.deleteById(id);
+    }
+
+    public void updateIssue(String id,Issue issue) throws Exception {
+            Optional<Issue> optionalIssue = issueRepository.findById(id);
+            if(optionalIssue.isPresent()) {
+                Issue willUpdatedIssue = optionalIssue.get();
+                willUpdatedIssue.setIssuetitle(issue.getIssuetitle()); // Başlığı güncelle
+                willUpdatedIssue.setIssuedescription(issue.getIssuedescription()); // Açıklamayı güncelle
+                issueRepository.save(willUpdatedIssue); // Nesneyi veritabanına kaydet
+            } else {
+                // Eğer IDye sahip bi obje yoksa
+                throw new Exception("Issue not found with id: " + id);
+            }
     }
 }
