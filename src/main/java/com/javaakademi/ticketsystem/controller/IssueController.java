@@ -6,18 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+//MASTER
 @RestController
 @RequestMapping("/test")
 public class IssueController {
     @Autowired
     private IssueService issueService;
-
     @PostMapping("/save")
     public void saveIssue(@RequestBody Issue issue){
         issueService.saveIssue(issue);
     }
-
     @GetMapping("/read")
     public List<Issue> getAllIssues(){
         return issueService.getAllIssues();

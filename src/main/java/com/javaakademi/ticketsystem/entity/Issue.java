@@ -15,7 +15,6 @@ public class Issue {
     private String issuetitle;
     @Column(name = "issuedescription")
     private String issuedescription;
-
     Issue() {
 
     }
