@@ -13,5 +13,10 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
 
+  security:
+    user:
+      name: yavuz
+      password : spring
+
 server:
   port: 8080
