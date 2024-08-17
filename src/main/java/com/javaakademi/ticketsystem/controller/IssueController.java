@@ -2,6 +2,7 @@ package com.javaakademi.ticketsystem.controller;
 
 import com.javaakademi.ticketsystem.entity.Issue;
 import com.javaakademi.ticketsystem.service.IssueService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,10 @@ public class IssueController {
     @Autowired
     private IssueService issueService;
 
+    @GetMapping("/testingsessionid")
+    public String session(HttpServletRequest http){
+        return "Session ID ->" + http.getSession().getId();
+    }
     @PostMapping("/save")
     public void saveIssue(@RequestBody Issue issue){
         issueService.saveIssue(issue);
