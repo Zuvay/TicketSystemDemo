@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface IssueRepository extends JpaRepository<Issue,String> {
     @Override
-    void deleteById(String s);
+    void deleteById(String id);
     //Bu interface veritabanı işlemleri yapmamızı sağlayacak
     //save create gibi metotlar hazır olarak elimizde olacak
 }
