@@ -18,14 +18,11 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException { //implementasyondan geldi
         Users users = repository.findByUsername(username);
 
-        if (users == null){
+        if (users == null) {
             System.out.println("User not found");
             throw new UsernameNotFoundException("User not found");
         }
-
         //Bu metot bir UserDetails döndürmek zorunda ama bu bir interface. Buna bağlı bir class oluşturmamız lazım
-
-
         return new UserPrincipal(users);
     }
 }
