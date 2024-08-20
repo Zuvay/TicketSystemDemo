@@ -3,18 +3,16 @@ package com.javaakademi.ticketsystem.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -27,7 +25,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(customizer -> customizer.disable()); //Tokeni disable etmezsek postmande çalışmıyor
-        httpSecurity.authorizeHttpRequests(request -> request.anyRequest().authenticated()); //Bu kod auth olmayan kişi için erişim engeli demek
+        httpSecurity.authorizeHttpRequests(request -> request
+                .requestMatchers("register","login")//Bu istekler için auth istememesini sağladık
+                .permitAll()
+                .anyRequest().authenticated()); //Bu kod auth olmayan kişi için erişim engeli demek
         httpSecurity.formLogin(Customizer.withDefaults()); //Bu bize postmande login formun html'ini döndürüyo. Basit bir login formunu tarayıcıda bize sağlıyor
 
         //Eğer bir login sayfam olsaydı bu kodu kullanırdık
@@ -52,6 +53,11 @@ public class SecurityConfig {
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12)); //Böylece setlerken girilmiş olan password'ün 12. kuvvetini alarak kaydedilmiş şifreye dönüşecek. Kriptolanmamış hesaba erişemez ama. NoOpPasswordEncoder.getInstance() -> kriptolanmamışlar için bunu kullanıyorduk
         provider.setUserDetailsService(userDetailService); //Bu yapı bize service'de yazdığımız kodların işe yaramasını sağlıyor. Buraya başka bir ekleme yapmıyoruz
         return provider;
+    }
+
+    @Bean //Manage etmemiz için gerekli olan bean. Bunu springe bildirmemiz gerekiyordu
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
 
