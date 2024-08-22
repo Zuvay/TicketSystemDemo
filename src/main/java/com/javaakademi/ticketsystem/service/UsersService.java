@@ -35,6 +35,7 @@ public class UsersService {
         // Token sayesinde erişim için her defasında username ve şifreye gerek kalmaz
        if(authentication.isAuthenticated()){
            return jwtService.generateToken(user.getUsername());
+
        }
 
        return "Failure";

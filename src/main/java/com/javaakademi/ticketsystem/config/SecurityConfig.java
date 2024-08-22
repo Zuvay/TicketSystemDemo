@@ -14,22 +14,31 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired //İlgili db bağlantısı için service kısmına bu implementin class'ını yazacağız çünkü bu userdetailservice bir interface
+    @Autowired
+    //İlgili db bağlantısı için service kısmına bu implementin class'ını yazacağız çünkü bu userdetailservice bir interface
     private UserDetailsService userDetailService;
+
+    @Autowired
+    private jwtFilter jwtFilter;
 
     //Burada bize başta verdiği security sistemini bypass edip kendi sistemimizi yazıyoruz
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(customizer -> customizer.disable()); //Tokeni disable etmezsek postmande çalışmıyor
-        httpSecurity.authorizeHttpRequests(request -> request
-                .requestMatchers("register","login")//Bu istekler için auth istememesini sağladık
-                .permitAll()
-                .anyRequest().authenticated()); //Bu kod auth olmayan kişi için erişim engeli demek
-        httpSecurity.formLogin(Customizer.withDefaults()); //Bu bize postmande login formun html'ini döndürüyo. Basit bir login formunu tarayıcıda bize sağlıyor
+        return httpSecurity.csrf(customizer -> customizer.disable()) //Tokeni disable etmezsek postmande çalışmıyor
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("register", "login")//Bu istekler için auth istememesini sağladık
+                        .permitAll()
+                        .anyRequest().authenticated()) //Bu kod auth olmayan kişi için erişim engeli demek.Üstte login ve register için erişim iznini kaldırdık ki o sayfaya erişebilelim
+                .httpBasic(Customizer.withDefaults()) //Bu da postmande erişimi sağlatıyo. Bu olmadan da browser üzerinden erişim sağlanabiliyo ama eğer login formu kaldırırsak da direkt erişim sağlanıyo. Galiba auth sağlatıyoruz
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//Bu her seferinde bizim SessionId'mizin değişmesini sağlıyo
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+
 
         //Eğer bir login sayfam olsaydı bu kodu kullanırdık
 //        httpSecurity.formLogin(form -> form
@@ -38,16 +47,11 @@ public class SecurityConfig {
 //                .permitAll() // Giriş sayfasının herkese açık olmasını sağlar
 //        );
 
-
-        httpSecurity.httpBasic(Customizer.withDefaults()); //Bu da postmande erişimi sağlatıyo. Bu olmadan da browser üzerinden erişim sağlanabiliyo ama eğer login formu kaldırırsak da direkt erişim sağlanıyo. Galiba auth sağlatıyoruz
-        httpSecurity.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); //Bu her seferinde bizim SessionId'mizin değişmesini sağlıyo
-
-        return httpSecurity.build();
     }
 
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
 
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(new BCryptPasswordEncoder(12)); //Böylece setlerken girilmiş olan password'ün 12. kuvvetini alarak kaydedilmiş şifreye dönüşecek. Kriptolanmamış hesaba erişemez ama. NoOpPasswordEncoder.getInstance() -> kriptolanmamışlar için bunu kullanıyorduk
@@ -59,7 +63,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
-
 
 
     //Hardcode user üretmek

@@ -3,6 +3,7 @@ package com.javaakademi.ticketsystem.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
@@ -29,6 +30,11 @@ public class JWTService {
         }
 
     }
+
+    public static String extractUserName(String token) {
+        return "";
+    }
+
     //Token oluşturma işi bitti şuan giriş yapıldığında bize bir token üretiyor fakat auth için tokenle giriş yapamıyoruz
     //Bunun için validation gerekli
     public String generateToken(String username) {
@@ -50,5 +56,10 @@ public class JWTService {
     private Key getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+
+    public boolean validateToken(String token, UserDetails userDetails) {
+        return true;
     }
 }
