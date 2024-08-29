@@ -7,23 +7,26 @@ import jakarta.persistence.*;
 public class Issue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id;
-    @Column(name = "username")
-    private String username;
-    @Column(name = "issuetitle")
     private String issuetitle;
-    @Column(name = "issuedescription")
     private String issuedescription;
-    Issue() {
+    private String authorName;
+    private String authorTitle;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users author;
 
-    }
-
-    public Issue(int id, String username, String issuetitle, String issuedescription) {
+    public Issue(int id, String issuetitle, String issuedescription, String authorName, String authorTitle, Users author) {
         this.id = id;
-        this.username = username;
         this.issuetitle = issuetitle;
         this.issuedescription = issuedescription;
+        this.authorName = authorName;
+        this.authorTitle = authorTitle;
+        this.author = author;
+    }
+
+    Issue() {
+
     }
 
     public int getId() {
@@ -32,14 +35,6 @@ public class Issue {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getIssuetitle() {
@@ -56,5 +51,29 @@ public class Issue {
 
     public void setIssuedescription(String issuedescription) {
         this.issuedescription = issuedescription;
+    }
+
+    public String getAuthorName() {
+        return authorName;
+    }
+
+    public void setAuthorName(String authorName) {
+        this.authorName = authorName;
+    }
+
+    public String getAuthorTitle() {
+        return authorTitle;
+    }
+
+    public void setAuthorTitle(String authorTitle) {
+        this.authorTitle = authorTitle;
+    }
+
+    public Users getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Users author) {
+        this.author = author;
     }
 }

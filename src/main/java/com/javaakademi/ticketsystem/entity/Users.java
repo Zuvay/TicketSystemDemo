@@ -2,24 +2,28 @@ package com.javaakademi.ticketsystem.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name = "username")
     private String username;
-    @Column(name = "password")
     private String password;
+    private String personalTitle;
+    @OneToMany(mappedBy = "authorName") // "authorName" Issue entity'sindeki özellik
+    private List<Issue> issues;
 
-    Users() {
-    }
+    public Users(){}
 
-    public Users(int id, String username, String password) {
+    public Users(int id, String username, String password, String personalTitle, List<Issue> issues) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.personalTitle = personalTitle;
+        this.issues = issues;
     }
 
     public int getId() {
@@ -44,5 +48,21 @@ public class Users {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPersonalTitle() {
+        return personalTitle;
+    }
+
+    public void setPersonalTitle(String personalTitle) {
+        this.personalTitle = personalTitle;
+    }
+
+    public List<Issue> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(List<Issue> issues) {
+        this.issues = issues;
     }
 }
