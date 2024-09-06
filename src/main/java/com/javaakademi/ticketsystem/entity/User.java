@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -15,10 +15,13 @@ public class Users {
     private String personalTitle;
     @OneToMany(mappedBy = "authorName") // "authorName" Issue entity'sindeki özellik
     private List<Issue> issues;
+//    Sistemsel olarak doğru olan bu fakat bazı başka sorunlara sebep oluyor.
+//    @OneToMany(mappedBy = "author") // "author" Issue entity'sindeki özellik
+//    private List<Issue> issues1;
 
-    public Users(){}
+    public User(){}
 
-    public Users(int id, String username, String password, String personalTitle, List<Issue> issues) {
+    public User(int id, String username, String password, String personalTitle, List<Issue> issues) {
         this.id = id;
         this.username = username;
         this.password = password;

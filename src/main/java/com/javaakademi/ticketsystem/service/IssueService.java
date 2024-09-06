@@ -1,7 +1,7 @@
 package com.javaakademi.ticketsystem.service;
 
 import com.javaakademi.ticketsystem.entity.Issue;
-import com.javaakademi.ticketsystem.entity.Users;
+import com.javaakademi.ticketsystem.entity.User;
 import com.javaakademi.ticketsystem.repository.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,8 +16,19 @@ public class IssueService {
     @Autowired
     private IssueRepository issueRepository;
 
+    @Autowired
+    private UserService usersService;
+
     public Issue saveIssue(Issue issue) {
-       return issueRepository.save(issue);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();//İsmi böyle aldık
+
+        User author = usersService.findByUsername(username); //İsme sahip kişiyi obje olarak bulduk
+
+        issue.setAuthor(author); //issue'nin post kısmına yansımadan yazan kişiyi verdik
+        issue.setAuthorName(author.getUsername());
+        issue.setAuthorTitle(author.getPersonalTitle());
+        return issueRepository.save(issue);
     }
 
     public List<Issue> getAllIssues() {

@@ -14,9 +14,9 @@ public class Issue {
     private String authorTitle;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users author;
+    private User author;
 
-    public Issue(int id, String issuetitle, String issuedescription, String authorName, String authorTitle, Users author) {
+    public Issue(int id, String issuetitle, String issuedescription, String authorName, String authorTitle, User author) {
         this.id = id;
         this.issuetitle = issuetitle;
         this.issuedescription = issuedescription;
@@ -25,7 +25,7 @@ public class Issue {
         this.author = author;
     }
 
-    Issue() {
+    public Issue() {
 
     }
 
@@ -69,11 +69,11 @@ public class Issue {
         this.authorTitle = authorTitle;
     }
 
-    public Users getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public void setAuthor(Users author) {
+    public void setAuthor(User author) {
         this.author = author;
     }
 }

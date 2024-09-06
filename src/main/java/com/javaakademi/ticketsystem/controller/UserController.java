@@ -1,7 +1,7 @@
 package com.javaakademi.ticketsystem.controller;
 
-import com.javaakademi.ticketsystem.entity.Users;
-import com.javaakademi.ticketsystem.service.UsersService;
+import com.javaakademi.ticketsystem.entity.User;
+import com.javaakademi.ticketsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
-public class UsersController {
+public class UserController {
     @Autowired
-    private UsersService service;
+    private UserService service;
 
 
     //Giriş yapan kişinin ismini alır
@@ -22,7 +22,7 @@ public class UsersController {
     }
 
     @PostMapping("/register")
-    public void register(@RequestBody Users user){
+    public void register(@RequestBody User user){
         service.register(user);
     }
 
