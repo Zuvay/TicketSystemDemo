@@ -1,6 +1,8 @@
 package com.javaakademi.ticketsystem.controller;
 
 import com.javaakademi.ticketsystem.entity.Issue;
+import com.javaakademi.ticketsystem.response.IssueRequest;
+import com.javaakademi.ticketsystem.response.IssueResponse;
 import com.javaakademi.ticketsystem.service.IssueService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +23,23 @@ public class IssueController {
     }
 
     @PostMapping("/save")
-    public Issue saveUser(@RequestBody Issue issue){
-        return issueService.saveIssue(issue);
+    public IssueResponse saveUser(@RequestBody IssueRequest issueRequest){
+        return issueService.saveIssue(issueRequest);
     }
 
     @GetMapping("/getspesific/{username}")
-    public List<Issue> getSpesificUserIssues(@PathVariable("username") String authorName){
-        return issueService.getSpesificUserIssues(authorName);
+    public List<IssueResponse> getSpesificUserIssues(@PathVariable("username") String username){
+        return issueService.getSpesificUserIssues(username);
     }
 
     @GetMapping("/read")
     public List<Issue> getAllIssues() {
         return issueService.getAllIssues();
+    }
+
+    @GetMapping("/responsetest")
+    public List<IssueResponse> getResponseIssue(){
+        return issueService.getIssueResponse();
     }
 
     @DeleteMapping("/delete/{id}")

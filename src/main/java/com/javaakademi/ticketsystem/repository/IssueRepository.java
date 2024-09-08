@@ -1,7 +1,10 @@
 package com.javaakademi.ticketsystem.repository;
 
 import com.javaakademi.ticketsystem.entity.Issue;
+import com.javaakademi.ticketsystem.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,9 +12,6 @@ import java.util.Optional;
 public interface IssueRepository extends JpaRepository<Issue,String> {
     @Override
     void deleteById(String id);
-    //Bu interface veritabanı işlemleri yapmamızı sağlayacak
-    //save create gibi metotlar hazır olarak elimizde olacak
-
-    List<Issue> findByAuthorName(String authorName); // AuthorName'e göre filtreleme
-
+    @Query("SELECT i FROM Issue i WHERE i.author.username = :username")
+    List<Issue> findIssuesByAuthorUsername(@Param("username") String username);
 }

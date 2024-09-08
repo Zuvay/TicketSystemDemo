@@ -13,11 +13,8 @@ public class User {
     private String username;
     private String password;
     private String personalTitle;
-    @OneToMany(mappedBy = "authorName") // "authorName" Issue entity'sindeki özellik
+    @OneToMany(mappedBy = "author") // "author" Issue entity'sindeki özellik
     private List<Issue> issues;
-//    Sistemsel olarak doğru olan bu fakat bazı başka sorunlara sebep oluyor.
-//    @OneToMany(mappedBy = "author") // "author" Issue entity'sindeki özellik
-//    private List<Issue> issues1;
 
     public User(){}
 

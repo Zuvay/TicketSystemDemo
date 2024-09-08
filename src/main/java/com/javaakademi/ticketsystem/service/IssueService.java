@@ -3,6 +3,8 @@ package com.javaakademi.ticketsystem.service;
 import com.javaakademi.ticketsystem.entity.Issue;
 import com.javaakademi.ticketsystem.entity.User;
 import com.javaakademi.ticketsystem.repository.IssueRepository;
+import com.javaakademi.ticketsystem.response.IssueRequest;
+import com.javaakademi.ticketsystem.response.IssueResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,26 +21,31 @@ public class IssueService {
     @Autowired
     private UserService usersService;
 
-    public Issue saveIssue(Issue issue) {
+    public IssueResponse saveIssue(IssueRequest issueRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();//İsmi böyle aldık
-
         User author = usersService.findByUsername(username); //İsme sahip kişiyi obje olarak bulduk
 
-        issue.setAuthor(author); //issue'nin post kısmına yansımadan yazan kişiyi verdik
-        issue.setAuthorName(author.getUsername());
-        issue.setAuthorTitle(author.getPersonalTitle());
-        return issueRepository.save(issue);
+
+        Issue issue = new Issue();
+        issue.setIssuetitle(issueRequest.getIssuetitle());
+        issue.setIssuedescription(issueRequest.getIssuedescription());
+        issue.setAuthor(author);
+        issueRepository.save(issue);
+        return new IssueResponse(issue);
     }
 
-    public List<Issue> getAllIssues() {
-        return issueRepository.findAll();
+    public List<IssueResponse> getIssueResponse(){
+        List<Issue> listIssue;
+        listIssue = issueRepository.findAll();
+        return listIssue.stream().map(IssueResponse::new).toList();
     }
+    public List<IssueResponse> getSpesificUserIssues(String username) {
 
-    public List<Issue> getSpesificUserIssues(String authorName){
-        return issueRepository.findByAuthorName(authorName);
+        List<Issue> issues =issueRepository.findIssuesByAuthorUsername(username);
+        return issues.stream().map(IssueResponse::new).toList();
+
     }
-
     public void deleteIssue(String id) {
         issueRepository.deleteById(id);
     }
@@ -55,4 +62,10 @@ public class IssueService {
             throw new Exception("Issue not found with id: " + id);
         }
     }
+    public List<Issue> getAllIssues() {
+        return issueRepository.findAll();
+    }
+
+
+
 }
