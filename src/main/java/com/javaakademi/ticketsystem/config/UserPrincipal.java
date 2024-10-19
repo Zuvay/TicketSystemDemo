@@ -1,4 +1,4 @@
-package com.javaakademi.ticketsystem.entity;
+package com.javaakademi.ticketsystem.config;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

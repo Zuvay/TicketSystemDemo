@@ -1,6 +1,5 @@
-package com.javaakademi.ticketsystem.service;
+package com.javaakademi.ticketsystem.config;
 
-import com.javaakademi.ticketsystem.entity.User;
 import com.javaakademi.ticketsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,8 +17,5 @@ public class UserService {
         repository.save(user);
     }
 
-    public User findByUsername(String username){
-        return repository.findByUsername(username);
-    }
 
 }
